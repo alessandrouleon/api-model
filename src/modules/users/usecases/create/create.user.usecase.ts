@@ -2,7 +2,8 @@ import { HashService } from "@/@shared/services/hash.service";
 import { IdService } from "@/@shared/services/id.service";
 import { UserRepositoryInterface } from "@/modules/users/repository/user.repository.interface";
 import { InputCreateUserUseCaseDto, OutputCreateUserUseCaseDto } from "@/modules/users/usecases/create/create.user.usecase.dto";
-import { BadRequestException, Inject, Injectable, Logger } from "@nestjs/common";
+import { UserMessageHelper } from "@/utils/message/message.help";
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { log } from "console";
 import UserFactory from "../../factory/user.factory";
 
@@ -26,13 +27,19 @@ export class CreateUserUseCase {
 
       if (username) {
          if (username.username === input.username) {
-            throw new BadRequestException('User already registered with this username');
+            throw new HttpException(
+               UserMessageHelper.EXIST_USERNAME,
+               HttpStatus.BAD_REQUEST,
+            );
          }
       }
 
       if (email) {
          if (email.email === input.email) {
-            throw new BadRequestException('User already registered with this email');
+            throw new HttpException(
+               UserMessageHelper.EXIST_EMAIL,
+               HttpStatus.BAD_REQUEST,
+            );
          }
       }
 

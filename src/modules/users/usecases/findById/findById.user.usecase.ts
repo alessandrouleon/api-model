@@ -1,5 +1,6 @@
 import { UserRepositoryInterface } from "@/modules/users/repository/user.repository.interface";
-import { BadRequestException, Inject, Injectable, Logger } from "@nestjs/common";
+import { UserMessageHelper } from "@/utils/message/message.help";
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 import { OutputFindByIdUserUseCaseDto } from "./findById.user.usecase.dto";
 
 @Injectable()
@@ -13,7 +14,10 @@ export class FindByIdUserUseCase {
         const user = await this.userRepository.findOneById(id);
 
         if (!user) {
-            throw new BadRequestException(`User with ID ${id} not found`);
+            throw new HttpException(
+                UserMessageHelper.ID_NOT_EXIST,
+                HttpStatus.BAD_REQUEST,
+            );
         }
 
         Logger.log(

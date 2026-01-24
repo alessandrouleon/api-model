@@ -1,5 +1,6 @@
 import { UserRepositoryInterface } from "@/modules/users/repository/user.repository.interface";
-import { BadRequestException, Inject, Injectable, Logger } from "@nestjs/common";
+import { UserMessageHelper } from "@/utils/message/message.help";
+import { HttpException, HttpStatus, Inject, Injectable, Logger } from "@nestjs/common";
 
 @Injectable()
 export class DeleteUserUseCase {
@@ -13,7 +14,10 @@ export class DeleteUserUseCase {
         const existsUser = await this.userRepository.findOneById(id);
 
         if (!existsUser) {
-            throw new BadRequestException(`User with ID ${id} not found`);
+            throw new HttpException(
+                UserMessageHelper.ID_NOT_EXIST_FOR_DELETED,
+                HttpStatus.BAD_REQUEST,
+            );
         }
 
         const deleteUser = await this.userRepository.delete(id);

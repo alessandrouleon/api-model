@@ -54,6 +54,7 @@ export class UserController {
 
     // Qualquer usuário autenticado pode ver
     @Get(':id')
+    @Roles(ROLES.ADMIN, ROLES.MANAGER, ROLES.USER)
     async findById(@Param('id') id: string) {
         try {
             return await this.userFacade.findById(id);
@@ -67,7 +68,7 @@ export class UserController {
 
     // Apenas ADMIN pode listar todos
     @Get()
-    @Roles(ROLES.ADMIN)
+    @Roles(ROLES.ADMIN, ROLES.MANAGER)
     async find(@Query() query: any) {
         const filter: any = {};
         for (const key in query) {

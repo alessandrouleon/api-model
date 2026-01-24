@@ -1,0 +1,40 @@
+services:
+  mongodb:
+    image: mongo:6.0.4
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: api-model
+    volumes:
+      - mongodb_local:/data/db
+      - ./mongodb_backup:/backup
+    ports:
+      - "27017:27017"
+    networks:
+      - ul-net
+
+  api-model:
+    build:
+      context: ./api-model
+      dockerfile: Dockerfile
+    image: api-model
+    container_name: api-model
+    restart: always
+    ports:
+      - "4000:4000"
+    env_file:
+      - "./api-model/.env"
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/api-model
+      - MIGRATION_DIR=./dist/migrations
+    depends_on:
+      - mongodb
+    networks:
+      - ul-net
+
+volumes:
+  mongodb_local:
+
+networks:
+  ul-net:
+    driver: bridge
