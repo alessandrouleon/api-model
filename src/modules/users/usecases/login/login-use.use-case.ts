@@ -15,6 +15,10 @@ export class LoginUserUseCase {
         if (!existUser) {
             throw new BadRequestException(`User with username ${username} not found`);
         }
+
+        if (!existUser.isActive) {
+            throw new BadRequestException(`User with username ${username} is not active`);
+        }
         return existUser;
     }
 }

@@ -44,6 +44,13 @@ export class UpdateUserUseCase {
             }
         }
 
+        if (!existeUser.isActive) {
+            throw new HttpException(
+                UserMessageHelper.USER_NOT_ACTIVE,
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+
         const user = UserFactory.createUserFactory({
             id: input.id,
             name: input.name,
