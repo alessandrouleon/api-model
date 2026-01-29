@@ -9,6 +9,7 @@ describe("UserEntity", () => {
     username: "joaoname",
     email: "joao@example.com",
     password: "Admin@123",
+    isActive: true,
     roles: [ROLES.ADMIN],
   };
 
@@ -23,6 +24,7 @@ describe("UserEntity", () => {
     expect(user.email).toBe(validProps.email);
     expect(user.password).toBe(validProps.password);
     expect(user.roles).toBe(validProps.roles);
+    expect(user.isActive).toBe(true);
     expect(user.createdAt).toBeInstanceOf(Date);
     expect(user.updatedAt).toBeInstanceOf(Date);
   });
@@ -58,11 +60,13 @@ describe("UserEntity", () => {
     user.email = "jane@example.com";
     user.password = "Admin@123";
     user.roles = [ROLES.USER];
+    user.isActive = false;
 
     expect(user.username).toBe("janedoe");
     expect(user.email).toBe("jane@example.com");
     expect(user.password).toBe("Admin@123");
     expect(user.roles).toEqual([ROLES.USER]);
+    expect(user.isActive).toBe(false);
   });
 
   /**
@@ -92,6 +96,7 @@ describe("UserEntity", () => {
       username: validProps.username,
       email: validProps.email,
       roles: validProps.roles,
+      isActive: true,
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
     });

@@ -33,6 +33,9 @@ export class User {
   })
   roles?: ROLES[];
 
+  @Prop({ type: Boolean, default: true })
+  isActive: boolean;
+
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
 

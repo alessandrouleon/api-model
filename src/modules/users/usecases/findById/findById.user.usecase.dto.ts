@@ -6,6 +6,7 @@ export class OutputFindByIdUserUseCaseDto {
     username: string;
     email: string;
     roles: ROLES[];
+    isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

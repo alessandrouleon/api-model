@@ -18,6 +18,7 @@ export class UserJoiValidator implements ValidatorInterface<UserEntity> {
       email: entity.email,
       password: entity.password,
       roles: entity.roles,
+      isActive: entity.isActive,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
@@ -85,6 +86,10 @@ export class UserJoiValidator implements ValidatorInterface<UserEntity> {
       roles: Joi.array().items(Joi.string().valid(ROLES.ADMIN, ROLES.USER, ROLES.GUEST, ROLES.MANAGER)).required().messages({
         'any.required': 'Roles are required',
         'array.includes': 'Roles must be ADMIN, USER, GUEST or MANAGER',
+      }),
+
+      isActive: Joi.boolean().required().messages({
+        'any.required': 'isActive is required',
       }),
 
       createdAt: Joi.date().required().messages({

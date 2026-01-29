@@ -49,7 +49,8 @@ export class CreateUserUseCase {
          username: input.username,
          email: input.email,
          password: input.password,
-         roles: input.roles
+         roles: input.roles,
+         isActive: input.isActive
       });
 
       user.password = await this.hashService.hash(user.password);

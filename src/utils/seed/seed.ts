@@ -18,6 +18,7 @@ async function main() {
       role: 'ADMIN',
       createdAt: new Date(),
       updatedAt: new Date(),
+      isActive: true,
     },
   ];
 

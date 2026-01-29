@@ -11,6 +11,7 @@ export type UserIterfaces = {
   email: string;
   password?: string;
   roles: ROLES[];
+  isActive?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
@@ -23,6 +24,7 @@ export type UserToJSON = {
   email: string;
   roles: ROLES[];
   password?: string;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
@@ -33,6 +35,7 @@ export class UserEntity extends Entity {
   private _email: string;
   private _password: string;
   private _roles: ROLES[];
+  private _isActive?: boolean;
 
 
   constructor(
@@ -45,6 +48,7 @@ export class UserEntity extends Entity {
     this._email = props.email;
     this._password = props.password;
     this._roles = props.roles
+    this._isActive = props.isActive ?? true;
 
     this.validate();
 
@@ -101,6 +105,12 @@ export class UserEntity extends Entity {
     this._roles = value;
     this.validate();
   }
+  set isActive(value: boolean) {
+    this._isActive = value;
+  }
+  get isActive() {
+    return this._isActive;
+  }
 
   toJSON(): UserToJSON {
     return {
@@ -109,6 +119,7 @@ export class UserEntity extends Entity {
       username: this.username,
       email: this.email,
       roles: this.roles,
+      isActive: this.isActive,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt

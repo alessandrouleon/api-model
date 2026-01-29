@@ -1,7 +1,8 @@
 import { HashService } from '@/@shared/services/hash.service';
 import { ROLES } from '@/modules/auth/enums/roles.enum';
 import { UserRepositoryInterface } from '@/modules/users/repository/user.repository.interface';
-import { BadRequestException } from '@nestjs/common';
+import { UserMessageHelper } from '@/utils/message/message.help';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UpdateUserUseCase } from './update.user.usecase';
 import { InputUpdateUserUseCaseDto } from './update.user.usecase.dto';
@@ -24,6 +25,7 @@ describe('UpdateUserUseCase', () => {
             username: 'johndoe',
             email: 'john@example.com',
             roles: [ROLES.ADMIN],
+            isActive: true,
         }),
     };
 
@@ -71,6 +73,7 @@ describe('UpdateUserUseCase', () => {
                 email: 'john@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             userRepository.findOneById.mockResolvedValue(mockUser as any);
@@ -93,12 +96,13 @@ describe('UpdateUserUseCase', () => {
                 email: 'john@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             userRepository.findOneById.mockResolvedValue(null);
 
             await expect(useCase.execute(input)).rejects.toThrow(
-                new BadRequestException('User with ID 999 not found'),
+                new HttpException(UserMessageHelper.ID_NOT_EXIST, HttpStatus.BAD_REQUEST),
             );
             expect(userRepository.findOneById).toHaveBeenCalledWith(input.id);
         });
@@ -111,6 +115,7 @@ describe('UpdateUserUseCase', () => {
                 email: 'john@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             const existingUser = { ...mockUser, username: 'johndoe' };
@@ -120,7 +125,7 @@ describe('UpdateUserUseCase', () => {
             userRepository.findByUsername.mockResolvedValue(userWithSameUsername as any);
 
             await expect(useCase.execute(input)).rejects.toThrow(
-                new BadRequestException('User already registered with this username'),
+                new HttpException(UserMessageHelper.EXIST_USERNAME_FOR_UPDATE, HttpStatus.BAD_REQUEST),
             );
             expect(userRepository.findByUsername).toHaveBeenCalledWith(input.username);
         });
@@ -133,6 +138,7 @@ describe('UpdateUserUseCase', () => {
                 email: 'newemail@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             const existingUser = { ...mockUser, email: 'john@example.com' };
@@ -142,7 +148,7 @@ describe('UpdateUserUseCase', () => {
             userRepository.findByEmail.mockResolvedValue(userWithSameEmail as any);
 
             await expect(useCase.execute(input)).rejects.toThrow(
-                new BadRequestException('User already registered with this email'),
+                new HttpException(UserMessageHelper.EXIST_EMAIL_FOR_UPDATE, HttpStatus.BAD_REQUEST),
             );
             expect(userRepository.findByEmail).toHaveBeenCalledWith(input.email);
         });
@@ -155,6 +161,7 @@ describe('UpdateUserUseCase', () => {
                 email: 'john@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             const existingUser = { ...mockUser, username: 'oldusername' };
@@ -179,6 +186,7 @@ describe('UpdateUserUseCase', () => {
                 email: 'newemail@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             const existingUser = { ...mockUser, email: 'oldemail@example.com' };
@@ -203,6 +211,7 @@ describe('UpdateUserUseCase', () => {
                 email: 'john@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             userRepository.findOneById.mockResolvedValue(mockUser as any);
@@ -227,6 +236,7 @@ describe('UpdateUserUseCase', () => {
                 email: 'john@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             userRepository.findOneById.mockResolvedValue(mockUser as any);
@@ -246,6 +256,7 @@ describe('UpdateUserUseCase', () => {
                 email: 'john@example.com',
                 password: 'Admin@123',
                 roles: [ROLES.ADMIN],
+                isActive: true,
             };
 
             userRepository.findOneById.mockResolvedValue(mockUser as any);

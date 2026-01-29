@@ -4,7 +4,7 @@ import { ROLES } from '@/modules/auth/enums/roles.enum';
 import { UserEntity } from '@/modules/users/domain/entities/user.entity';
 import { UserRepositoryInterface } from '@/modules/users/repository/user.repository.interface';
 import { CreateUserUseCase } from '@/modules/users/usecases/create/create.user.usecase';
-import { BadRequestException } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 
 describe('CreateUserUseCase', () => {
     let createUserUseCase: CreateUserUseCase;
@@ -39,6 +39,7 @@ describe('CreateUserUseCase', () => {
             email: 'john@example.com',
             password: 'Abc@1234',
             roles: [ROLES.ADMIN],
+            isActive: true
         };
 
         const generatedId = '6959d939884255f47e7a2df0';
@@ -66,6 +67,7 @@ describe('CreateUserUseCase', () => {
             username: input.username,
             email: input.email,
             roles: input.roles,
+            isActive: true,
             createdAt: new Date(),
             updatedAt: new Date(),
             deletedAt: null,
@@ -93,18 +95,20 @@ describe('CreateUserUseCase', () => {
             email: 'john@example.com',
             password: 'Abc@1234',
             roles: [ROLES.ADMIN],
+            isActive: true
         };
 
         const existingUser = {
             id: 'existing-id',
             username: 'johndoe',
             email: 'other@example.com',
+            isActive: true
         } as UserEntity;
 
         userRepositoryMock.findByUsername.mockResolvedValue(existingUser);
         userRepositoryMock.findByEmail.mockResolvedValue(null);
 
-        await expect(createUserUseCase.execute(input)).rejects.toThrow(BadRequestException);
+        await expect(createUserUseCase.execute(input)).rejects.toThrow(HttpException);
         await expect(createUserUseCase.execute(input)).rejects.toThrow('User already registered with this username');
     });
 
@@ -116,6 +120,7 @@ describe('CreateUserUseCase', () => {
             email: 'john@example.com',
             password: 'Abc@1234',
             roles: [ROLES.ADMIN],
+            isActive: true
         };
 
         const existingUser = {
@@ -127,7 +132,7 @@ describe('CreateUserUseCase', () => {
         userRepositoryMock.findByUsername.mockResolvedValue(null);
         userRepositoryMock.findByEmail.mockResolvedValue(existingUser);
 
-        await expect(createUserUseCase.execute(input)).rejects.toThrow(BadRequestException);
+        await expect(createUserUseCase.execute(input)).rejects.toThrow(HttpException);
         await expect(createUserUseCase.execute(input)).rejects.toThrow('User already registered with this email');
     });
 
@@ -139,6 +144,7 @@ describe('CreateUserUseCase', () => {
             email: 'jane@example.com',
             password: 'Xyz@9876',
             roles: [ROLES.USER],
+            isActive: true
         };
 
         userRepositoryMock.findByUsername.mockResolvedValue(null);

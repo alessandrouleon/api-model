@@ -1,7 +1,8 @@
 import { ROLES } from '@/modules/auth/enums/roles.enum';
 import { UserEntity } from '@/modules/users/domain/entities/user.entity';
 import { UserRepositoryInterface } from '@/modules/users/repository/user.repository.interface';
-import { BadRequestException, Logger } from '@nestjs/common';
+import { UserMessageHelper } from '@/utils/message/message.help';
+import { HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { FindByIdUserUseCase } from './findById.user.usecase';
 import { OutputFindByIdUserUseCaseDto } from './findById.user.usecase.dto';
 
@@ -40,6 +41,7 @@ describe('FindByIdUserUseCase', () => {
             username: 'john.doe',
             email: 'john@example.com',
             roles: [ROLES.ADMIN],
+            isActive: true,
             createdAt: new Date(),
             updatedAt: new Date(),
             deletedAt: null,
@@ -56,6 +58,7 @@ describe('FindByIdUserUseCase', () => {
             email: 'john@example.com',
             username: 'john.doe',
             roles: [ROLES.ADMIN],
+            isActive: true,
             createdAt: expect.any(Date),
             updatedAt: expect.any(Date),
             deletedAt: null,
@@ -70,7 +73,8 @@ describe('FindByIdUserUseCase', () => {
         userRepository.findOneById.mockResolvedValueOnce(null);
 
         await expect(useCase.execute('999')).rejects.toThrow(
-            new BadRequestException('User with ID 999 not found'),
+            new HttpException(UserMessageHelper.ID_NOT_EXIST,
+                HttpStatus.BAD_REQUEST,),
         );
 
         expect(userRepository.findOneById).toHaveBeenCalledWith('999');

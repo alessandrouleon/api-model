@@ -7,6 +7,7 @@ export class InputFindUserUseCaseDto {
     username: string;
     email: string;
     role: ROLES;
+    isActive: boolean;
 }
 
 

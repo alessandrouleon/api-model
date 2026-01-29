@@ -7,6 +7,7 @@ export class InputUpdateUserUseCaseDto {
     email: string;
     password: string;
     roles: ROLES[];
+    isActive: boolean;
 }
 
 export class OutputUpdateUserUseCaseDto {
@@ -15,6 +16,7 @@ export class OutputUpdateUserUseCaseDto {
     username: string;
     email: string;
     roles: ROLES[];
+    isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
