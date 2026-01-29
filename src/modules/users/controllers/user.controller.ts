@@ -35,7 +35,7 @@ export class UserController {
 
     // ADMIN e MANAGER podem atualizar
     @Put(':id')
-    @Roles(ROLES.ADMIN, ROLES.MANAGER)
+    @Roles(ROLES.ADMIN, ROLES.CLIENT_ADMIN)
     async update(
         @Param('id') id: string,
         @Body() input: any,
@@ -54,7 +54,7 @@ export class UserController {
 
     // Qualquer usuário autenticado pode ver
     @Get(':id')
-    @Roles(ROLES.ADMIN, ROLES.MANAGER, ROLES.USER)
+    @Roles(ROLES.ADMIN, ROLES.CLIENT_ADMIN, ROLES.USER)
     async findById(@Param('id') id: string) {
         try {
             return await this.userFacade.findById(id);
@@ -68,7 +68,7 @@ export class UserController {
 
     // Apenas ADMIN pode listar todos
     @Get()
-    @Roles(ROLES.ADMIN, ROLES.MANAGER)
+    @Roles(ROLES.ADMIN, ROLES.CLIENT_ADMIN, ROLES.MANAGER, ROLES.USER)
     async find(@Query() query: any) {
         const filter: any = {};
         for (const key in query) {

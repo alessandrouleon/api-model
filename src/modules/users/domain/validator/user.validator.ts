@@ -83,9 +83,9 @@ export class UserJoiValidator implements ValidatorInterface<UserEntity> {
           'string.pattern.base': PASSWORD_INVALID_MESSAGE,
         }),
 
-      roles: Joi.array().items(Joi.string().valid(ROLES.ADMIN, ROLES.USER, ROLES.GUEST, ROLES.MANAGER)).required().messages({
+      roles: Joi.array().items(Joi.string().valid(ROLES.ADMIN, ROLES.CLIENT_ADMIN, ROLES.USER, ROLES.GUEST, ROLES.MANAGER)).required().messages({
         'any.required': 'Roles are required',
-        'array.includes': 'Roles must be ADMIN, USER, GUEST or MANAGER',
+        'array.includes': 'Roles must be ADMIN, CLIENT_ADMIN, USER, GUEST or MANAGER',
       }),
 
       isActive: Joi.boolean().required().messages({
