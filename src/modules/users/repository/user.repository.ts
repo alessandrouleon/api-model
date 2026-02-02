@@ -131,12 +131,16 @@ export class UserRepository implements UserRepositoryInterface {
       filter = {},
       order = "desc",
       orderby = "createdAt",
-      limit = 25,
+      limit = 15,
       page = 1,
       skip = (page - 1) * limit,
     } = query;
 
-    const queryBuild = {};
+
+    const queryBuild = {
+      deletedAt: { $in: [null, undefined] },
+      roles: { $ne: 'ADMIN' },
+    };
     const $or = [];
 
     if (filter.name) {
@@ -162,11 +166,6 @@ export class UserRepository implements UserRepositoryInterface {
     } else if (filter.search) {
       $or.push({ roles: { $regex: filter.search, $options: 'i' } });
     }
-
-    $or.push(
-      { deletedAt: { $exists: false } },
-      { deletedAt: null },
-    );
 
     if ($or.length > 0) {
       queryBuild['$or'] = $or;
