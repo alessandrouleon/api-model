@@ -56,52 +56,55 @@ var UpdateUserUseCase = /** @class */ (function () {
     }
     UpdateUserUseCase.prototype.execute = function (input) {
         return __awaiter(this, void 0, Promise, function () {
-            var existeUser, getUsername, getEmail, user, _a, userUpdated;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var existeUser, getUsername, getEmail, passwordToSave, user, userUpdated;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0: return [4 /*yield*/, this.userRepository.findOneById(input.id)];
                     case 1:
-                        existeUser = _b.sent();
+                        existeUser = _a.sent();
                         if (!existeUser) {
                             throw new common_1.HttpException(message_help_1.UserMessageHelper.ID_NOT_EXIST, common_1.HttpStatus.BAD_REQUEST);
                         }
                         if (!(input && input.username !== existeUser.username)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.userRepository.findByUsername(input.username)];
                     case 2:
-                        getUsername = _b.sent();
+                        getUsername = _a.sent();
                         if (getUsername) {
                             throw new common_1.HttpException(message_help_1.UserMessageHelper.EXIST_USERNAME_FOR_UPDATE, common_1.HttpStatus.BAD_REQUEST);
                         }
-                        _b.label = 3;
+                        _a.label = 3;
                     case 3:
                         if (!(input && input.email !== existeUser.email)) return [3 /*break*/, 5];
                         return [4 /*yield*/, this.userRepository.findByEmail(input.email)];
                     case 4:
-                        getEmail = _b.sent();
+                        getEmail = _a.sent();
                         if (getEmail) {
                             throw new common_1.HttpException(message_help_1.UserMessageHelper.EXIST_EMAIL_FOR_UPDATE, common_1.HttpStatus.BAD_REQUEST);
                         }
-                        _b.label = 5;
+                        _a.label = 5;
                     case 5:
                         if (!existeUser.isActive) {
                             throw new common_1.HttpException(message_help_1.UserMessageHelper.USER_NOT_ACTIVE, common_1.HttpStatus.BAD_REQUEST);
                         }
+                        passwordToSave = existeUser.password;
+                        if (!(input.password && input.password.trim() !== '')) return [3 /*break*/, 7];
+                        return [4 /*yield*/, this.hashService.hash(input.password)];
+                    case 6:
+                        passwordToSave = _a.sent();
+                        _a.label = 7;
+                    case 7:
                         user = user_factory_1["default"].createUserFactory({
                             id: input.id,
                             name: input.name,
                             username: input.username,
                             email: input.email,
-                            password: input.password,
+                            password: passwordToSave,
                             roles: input.roles,
                             isActive: input.isActive
                         });
-                        _a = user;
-                        return [4 /*yield*/, this.hashService.hash(user.password)];
-                    case 6:
-                        _a.password = _b.sent();
                         return [4 /*yield*/, this.userRepository.update(user)];
-                    case 7:
-                        userUpdated = _b.sent();
+                    case 8:
+                        userUpdated = _a.sent();
                         common_1.Logger.log("User updated. [ID: " + user.id + "][name: " + user.name + "]", 'UpdateUserUseCase.execute');
                         return [2 /*return*/, userUpdated.toJSON()];
                 }

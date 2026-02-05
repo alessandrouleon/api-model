@@ -51,17 +51,22 @@ export class UpdateUserUseCase {
             );
         }
 
+        let passwordToSave = existeUser.password;
+
+        if (input.password && input.password.trim() !== '') {
+            passwordToSave = await this.hashService.hash(input.password);
+        }
+
         const user = UserFactory.createUserFactory({
             id: input.id,
             name: input.name,
             username: input.username,
             email: input.email,
-            password: input.password,
+            password: passwordToSave,
             roles: input.roles,
             isActive: input.isActive
         });
 
-        user.password = await this.hashService.hash(user.password);
         const userUpdated = await this.userRepository.update(user);
 
         Logger.log(
