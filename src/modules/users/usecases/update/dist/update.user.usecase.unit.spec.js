@@ -64,7 +64,7 @@ describe('UpdateUserUseCase', function () {
         email: 'john@example.com',
         password: '$2b$10$LDrk/MIaK3xdOvYganwXIuzRDeTDMzeJKRd6t3Sxja2pes14jRvii',
         roles: [roles_enum_1.ROLES.ADMIN],
-        isActive: true,
+        // isActive: true,
         toJSON: jest.fn().mockReturnValue({
             id: '123',
             name: 'John Doe',
