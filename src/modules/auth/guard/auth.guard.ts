@@ -1,4 +1,3 @@
-import { jwtConstants } from '@/modules/auth/constants/auth-user.secret';
 import { IS_PUBLIC_KEY } from '@/modules/auth/decorators/public.decorator';
 import {
   CanActivate,
@@ -24,7 +23,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Verifica se a rota é pública
@@ -45,12 +44,7 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret: jwtConstants.secret,
-        algorithms: ['HS256'],
-      });
-
-      // Validações essenciais do payload
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token);
       this.validatePayload(payload);
 
       // Anexa usuário ao request com roles normalizadas
